@@ -4,6 +4,7 @@ import com.gabrielsilva.dscatalog.dto.CategoryDTO;
 import com.gabrielsilva.dscatalog.entities.Category;
 import com.gabrielsilva.dscatalog.repositories.CategoryRepository;
 import com.gabrielsilva.dscatalog.services.exceptions.ObjectNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,20 @@ public class CategoryService {
         entity = repository.save(entity);
 
         return new CategoryDTO(entity);
+    }
+
+    @Transactional
+    public CategoryDTO update(Long id, CategoryDTO dto) {
+        try {
+            Category entity = repository.getReferenceById(id);
+
+            entity.setName(dto.getName());
+
+            return new CategoryDTO(entity);
+
+        } catch (EntityNotFoundException e) {
+            throw new ObjectNotFoundException("Categoria não encontrada");
+        }
     }
 
 }
