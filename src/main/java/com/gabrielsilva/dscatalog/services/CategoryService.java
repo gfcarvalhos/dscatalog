@@ -24,11 +24,24 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
-        try {
-            Category cat = repository.getReferenceById(id);
-            return new CategoryDTO(cat);
-        } catch (Exception e) {
-            throw new ObjectNotFoundException("Categoria não encontrada");
-        }
+        Category cat = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada"));
+        return new CategoryDTO(cat);
+    }
+
+    @Transactional
+    public CategoryDTO insert(CategoryDTO dto) {
+        Category entity = new Category();
+        copyDtoToEntity(dto, entity);
+
+        entity = repository.save(entity);
+
+        return new CategoryDTO(entity);
+    }
+
+
+    private void copyDtoToEntity(CategoryDTO dto, Category entity){
+        entity.setId(dto.getId());
+        entity.setName(dto.getName());
     }
 }
