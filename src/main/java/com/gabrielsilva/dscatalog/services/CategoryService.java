@@ -3,9 +3,11 @@ package com.gabrielsilva.dscatalog.services;
 import com.gabrielsilva.dscatalog.dto.CategoryDTO;
 import com.gabrielsilva.dscatalog.entities.Category;
 import com.gabrielsilva.dscatalog.repositories.CategoryRepository;
+import com.gabrielsilva.dscatalog.services.exceptions.DatabaseException;
 import com.gabrielsilva.dscatalog.services.exceptions.ObjectNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,4 +56,15 @@ public class CategoryService {
         }
     }
 
+    @Transactional
+    public void delete(Long id) {
+        if(!repository.existsById(id)){
+            throw new ObjectNotFoundException("Categoria não encontrada");
+        }
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referencial");
+        }
+    }
 }
