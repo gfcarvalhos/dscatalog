@@ -32,16 +32,11 @@ public class CategoryService {
     @Transactional
     public CategoryDTO insert(CategoryDTO dto) {
         Category entity = new Category();
-        copyDtoToEntity(dto, entity);
+        entity.setName(dto.getName());
 
         entity = repository.save(entity);
 
         return new CategoryDTO(entity);
     }
 
-
-    private void copyDtoToEntity(CategoryDTO dto, Category entity){
-        entity.setId(dto.getId());
-        entity.setName(dto.getName());
-    }
 }
