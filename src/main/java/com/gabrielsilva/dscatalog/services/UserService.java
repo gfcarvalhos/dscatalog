@@ -3,6 +3,7 @@ package com.gabrielsilva.dscatalog.services;
 import com.gabrielsilva.dscatalog.dto.RoleDTO;
 import com.gabrielsilva.dscatalog.dto.UserDTO;
 import com.gabrielsilva.dscatalog.dto.UserInsertDTO;
+import com.gabrielsilva.dscatalog.dto.UserUpdateDTO;
 import com.gabrielsilva.dscatalog.entities.Role;
 import com.gabrielsilva.dscatalog.entities.User;
 import com.gabrielsilva.dscatalog.repositories.RoleRepository;
@@ -63,7 +64,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         try {
             User entity = repository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
