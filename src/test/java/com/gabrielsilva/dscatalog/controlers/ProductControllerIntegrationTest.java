@@ -3,6 +3,7 @@ package com.gabrielsilva.dscatalog.controlers;
 import com.gabrielsilva.dscatalog.dto.ProductDTO;
 import com.gabrielsilva.dscatalog.services.ProductService;
 import com.gabrielsilva.dscatalog.tests.Factory;
+import com.gabrielsilva.dscatalog.tests.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,15 +37,25 @@ public class ProductControllerIntegrationTest {
     @Autowired
     private ProductService service;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private long existingId;
     private long nonExistingId;
     private long countTotalProducts;
+
+    private String username, password, bearerToken;
 
     @BeforeEach
     void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 1000L;
         countTotalProducts = 25L;
+
+        username = "maria@gmail.com";
+        password = "123456";
+
+        bearerToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
     }
 
     @Test
@@ -69,9 +80,10 @@ public class ProductControllerIntegrationTest {
         String expectedDescription = productDTO.getDescription();
 
         String jsonBody = objectMapper.writeValueAsString(productDTO);
-        ResultActions result = mockMvc
-                .perform(MockMvcRequestBuilders.put("/products/{id}", existingId)
-                        .content(jsonBody).contentType(MediaType.APPLICATION_JSON)
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/products/{id}", existingId)
+                        .header("Authorization", "Bearer " + bearerToken)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isOk());
@@ -88,6 +100,7 @@ public class ProductControllerIntegrationTest {
 
         ResultActions result = mockMvc
                 .perform(MockMvcRequestBuilders.put("/products/{id}", nonExistingId)
+                        .header("Authorization", "Bearer " + bearerToken)
                         .content(jsonBody).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
 
