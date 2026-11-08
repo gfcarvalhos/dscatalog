@@ -1,14 +1,12 @@
 package com.gabrielsilva.dscatalog.controllers;
 
 import com.gabrielsilva.dscatalog.dto.EmailDTO;
+import com.gabrielsilva.dscatalog.dto.NewPasswordDTO;
 import com.gabrielsilva.dscatalog.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/auth")
@@ -21,6 +19,11 @@ public class AuthController {
     public ResponseEntity<Void> createRecoverToken(@Valid @RequestBody EmailDTO body){
         authService.createRecoverToken(body);
         return ResponseEntity.noContent().build();
+    }
 
+    @PutMapping(value = "/new-password")
+    public ResponseEntity<Void> saveNewPassword(@Valid @RequestBody NewPasswordDTO dto){
+        authService.saveNewPassword(dto);
+        return ResponseEntity.noContent().build();
     }
 }
