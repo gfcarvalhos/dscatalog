@@ -2,6 +2,7 @@ package com.gabrielsilva.dscatalog.controllers.handlers;
 
 import com.gabrielsilva.dscatalog.dto.CustomError;
 import com.gabrielsilva.dscatalog.services.exceptions.DatabaseException;
+import com.gabrielsilva.dscatalog.services.exceptions.EmailException;
 import com.gabrielsilva.dscatalog.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,13 @@ public class ControllerExceptionHandler {
         for (FieldError f : e.getBindingResult().getFieldErrors()) {
             err.addError(f.getField(), f.getDefaultMessage());
         };
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<CustomError> email(EmailException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        CustomError err = new CustomError(Instant.now(), request.getRequestURI(), e.getMessage(), status.value());
         return ResponseEntity.status(status).body(err);
     }
 }

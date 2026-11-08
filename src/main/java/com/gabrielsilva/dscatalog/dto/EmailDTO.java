@@ -5,37 +5,17 @@ import jakarta.validation.constraints.NotBlank;
 
 public class EmailDTO {
 
-    @NotBlank
-    @Email
-    private String to;
+    @NotBlank(message = "Campo obrigatório")
+    @Email(message = "Email inválido")
+    private String email;
 
-    @NotBlank
-    private String subject;
+    public EmailDTO(){};
 
-    @NotBlank
-    private String body;
-
-    public String getTo() {
-        return to;
+    public EmailDTO(String email) {
+        this.email = email;
     }
 
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public String getEmail() {
+        return email;
     }
 }
